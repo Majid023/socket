@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<style>
+			#incoming-chat-window{
+				text-align:left;
+				overflow: auto;
+				
+				background-color: red;
+				display:inline;
+			}
+			#outgoing-chat-window{
+				text-align: right;
+				overflow: auto;
+				background-color: blue;
+				display: inline;
+			}
+		</style>
+	</head>
+<body>
+<span id="incoming-chat-window"></span>
+<span id="outgoing-chat-window">sadsa</span>
+
+<form id="outgoing-chat-form">
+	<input type="text" size="50" id="outgoing-chat-field"/>
+	<input type="submit"/>
+</form>
+<button id="room">join</button>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$("#outgoing-chat-form").submit(function(e) {
+				e.preventDefault();
+				socket.emit('send message',$("#outgoing-chat-field").val());
+				$("#outgoing-chat-field").val('');
+			});
+		});
+		var socket = io.connect('http://localhost');
+		socket.on('news',function(data){
+		  $('#incoming-chat-window').append(data+'<br/>');
+		});
+
+		socket.on('new message',function(data){
+			$("#outgoing-chat-window").append(data+'<br/>');
+		});
+
+
+		$("#room").click(function(e){
+			e.preventDefault();
+			var data ={
+				room:'beta'
+			}
+
+			socket.emit('subscribe', data);
+
+
+		});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</script>
+</body>
+</html>
